@@ -23,7 +23,7 @@ public class MongoDBHandler {
 	this.mongoCredential = MongoCredential.createCredential(userName,
 		database, password.toCharArray());
 
-	this.mongoClient = new MongoClient(new ServerAddress(Controller.host),
+	this.mongoClient = new MongoClient(new ServerAddress(host),
 		Arrays.asList(mongoCredential));
 	this.db = mongoClient.getDB(database);
     }

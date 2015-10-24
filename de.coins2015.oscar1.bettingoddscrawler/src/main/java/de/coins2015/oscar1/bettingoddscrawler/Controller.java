@@ -1,55 +1,32 @@
 package de.coins2015.oscar1.bettingoddscrawler;
 
-import edu.uci.ics.crawler4j.crawler.CrawlConfig;
-import edu.uci.ics.crawler4j.crawler.CrawlController;
-import edu.uci.ics.crawler4j.fetcher.PageFetcher;
-import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
-import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
+import org.json.simple.JSONObject;
 
 public class Controller {
-    public static String host;
-    public static String port;
-    public static String userName;
-    public static String password;
-    public static String database;
 
     public static void main(String[] args) throws Exception {
 
-	host = args[0];
-	port = args[1];
-	userName = args[2];
-	password = args[3];
-	database = args[4];
+	String host = args[0];
+	String port = args[1];
+	String userName = args[2];
+	String password = args[3];
+	String database = args[4];
 
-	String crawlStorageFolder = "src/../data/crawler";
+	String[] pages = {
+		"http://www.oddschecker.com/awards/oscars/best-picture",
+		"http://www.oddschecker.com/awards/oscars/best-director",
+		"http://www.oddschecker.com/awards/oscars/best-actor",
+		"http://www.oddschecker.com/awards/oscars/best-actress" };
 
-	int numberOfCrawlers = 1;
+	BettingOddsCrawler boc = new BettingOddsCrawler();
 
-	CrawlConfig config = new CrawlConfig();
+	MongoDBHandler mdbh = new MongoDBHandler(host, port, userName,
+		database, password);
 
-	config.setCrawlStorageFolder(crawlStorageFolder);
-
-	config.setPolitenessDelay(500);
-
-	config.setMaxDepthOfCrawling(1);
-
-	config.setMaxPagesToFetch(1000);
-
-	config.setIncludeBinaryContentInCrawling(false);
-
-	config.setResumableCrawling(false);
-
-	PageFetcher pageFetcher = new PageFetcher(config);
-	RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-	RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig,
-		pageFetcher);
-	CrawlController controller = new CrawlController(config, pageFetcher,
-		robotstxtServer);
-
-	controller
-		.addSeed("http://www.oddschecker.com/awards/oscars/best-picture");
-
-	controller.start(BettingOddsCrawler.class, numberOfCrawlers);
+	for (String page : pages) {
+	    JSONObject result = boc.visit(page);
+	    mdbh.storeData(result, "bettingOdds");
+	}
 
     }
 }

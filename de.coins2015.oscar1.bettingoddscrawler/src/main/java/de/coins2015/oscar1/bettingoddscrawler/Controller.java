@@ -16,7 +16,9 @@ public class Controller {
 		"http://www.oddschecker.com/awards/oscars/best-picture",
 		"http://www.oddschecker.com/awards/oscars/best-director",
 		"http://www.oddschecker.com/awards/oscars/best-actor",
-		"http://www.oddschecker.com/awards/oscars/best-actress" };
+		"http://www.oddschecker.com/awards/oscars/best-actress",
+		"http://www.oddschecker.com/awards/oscars/best-supporting-actor",
+		"http://www.oddschecker.com/awards/oscars/best-supporting-actress" };
 
 	BettingOddsCrawler boc = new BettingOddsCrawler();
 

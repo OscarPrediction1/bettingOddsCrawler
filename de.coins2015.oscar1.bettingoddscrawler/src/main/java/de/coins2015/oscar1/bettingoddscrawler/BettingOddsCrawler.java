@@ -14,34 +14,11 @@ import org.jsoup.nodes.Document;
 
 public class BettingOddsCrawler {
 
-    private static final Map<String, String> bettingAgencies;
+    private static final Map<String, String> boxOfficeIds;
     static {
-	bettingAgencies = new HashMap<String, String>();
-	bettingAgencies.put("B3", "bet365");
-	bettingAgencies.put("SK", "skybet");
-	bettingAgencies.put("BX", "totesport");
-	bettingAgencies.put("BY", "boylesports");
-	bettingAgencies.put("FR", "betfred");
-	bettingAgencies.put("SO", "sportingbet");
-	bettingAgencies.put("VC", "bet_victor");
-	bettingAgencies.put("PP", "paddy_power");
-	bettingAgencies.put("SJ", "stan_james");
-	bettingAgencies.put("EE", "888sport");
-	bettingAgencies.put("LD", "ladbrokes");
-	bettingAgencies.put("CE", "coral");
-	bettingAgencies.put("WH", "william_hill");
-	bettingAgencies.put("WN", "winner");
-	bettingAgencies.put("FB", "betfair_sportsbook");
-	bettingAgencies.put("WA", "betway");
-	bettingAgencies.put("TI", "titan_bet");
-	bettingAgencies.put("UN", "unibet");
-	bettingAgencies.put("BW", "bwin");
-	bettingAgencies.put("RD", "32red_bet");
-	bettingAgencies.put("OE", "10bet");
-	bettingAgencies.put("MR", "marathon_bet");
-	bettingAgencies.put("BF", "betfair");
-	bettingAgencies.put("BD", "betdaq");
-	bettingAgencies.put("MA", "matchbook");
+	boxOfficeIds = new HashMap<String, String>();
+	boxOfficeIds.put("name", "boxOfficeId");
+
     }
 
     @SuppressWarnings("unchecked")
@@ -73,7 +50,7 @@ public class BettingOddsCrawler {
 
 		String tr = row.substring(0, row.indexOf(">"));
 
-		String id = tr.substring(tr.indexOf("data-participant-id=\""));
+		String id = tr.substring(tr.indexOf("data-bid=\""));
 		id = id.substring(id.indexOf("\"") + 1);
 		id = id.substring(0, id.indexOf("\""));
 
@@ -88,9 +65,10 @@ public class BettingOddsCrawler {
 		String[] columns = StringUtils
 			.splitByWholeSeparatorPreserveAllTokens(
 				row.substring(tr.length()), "</td>");
+		int j = 0;
 		for (String column : columns) {
 		    column = StringUtils.trim(column);
-		    if (column.startsWith("<td id")) {
+		    if (column.startsWith("<td class")) {
 
 			String bettingAgencyId = column.substring(column
 				.indexOf("id=\"") + 4);
@@ -101,7 +79,8 @@ public class BettingOddsCrawler {
 			String odds = column.substring(column.indexOf(">") + 1,
 				column.length());
 
-			itemJson.put(bettingAgencyId, odds);
+			itemJson.put(j, odds);
+			j++;
 		    }
 		}
 		dataJson.add(itemJson);
